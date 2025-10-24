@@ -1,24 +1,31 @@
-# 🎓 Syriana Student App
+# 🎓 Syriana Student Management System
 
-> A modern, user-friendly student management system for educational institutions
+> A modern, full-stack student management system for educational institutions
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node](https://img.shields.io/badge/node-%3E%3D14.0.0-brightgreen)]()
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)]()
+[![Node](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen)]()
+[![React](https://img.shields.io/badge/react-18.2.0-61dafb.svg)]()
+[![MongoDB](https://img.shields.io/badge/mongodb-6.0+-green.svg)]()
 
 ## 📖 Table of Contents
 
-- [What is this?](#what-is-this)
+- [Overview](#overview)
 - [Key Features](#key-features)
-- [Quick Start](#quick-start)
+- [Quick Start](#quick-start-guide)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
 - [Project Structure](#project-structure)
-- [Technologies Used](#technologies-used)
 - [API Documentation](#api-documentation)
-- [Contributing](#contributing)
+- [Deployment](#deployment)
+- [Troubleshooting](#troubleshooting)
 - [License](#license)
 
 ---
 
-## 🎯 What is this?
+## 📋 Overview
+
+**Syriana Student Management System** is a comprehensive web application designed to streamline academic operations. This platform provides a unified solution for students, instructors, and administrators to manage courses, grades, student records, and academic analytics.
 
 **Syriana Student App** is a complete student management system that helps schools manage:
 
@@ -27,26 +34,42 @@
 - 📊 **Grades** - Grading system with GPA calculation
 - 📈 **Analytics** - Performance tracking and statistics
 
-### Who uses it?
+### Who Uses It?
 
-- **Students**: Register, login, view grades, update their profile
+- **Students**: Register, login, view grades, track progress, update profile
 - **Administrators**: Manage all students, courses, grades, and view analytics
+- **Teachers**: Manage courses, record grades, and track student performance
 
 ---
 
 ## ✨ Key Features
 
 ### For Students
+
 - ✅ **Simple Registration** - Only 5 fields to get started
 - ✅ **Complete Profile** - Add details after login (academic info, address, etc.)
 - ✅ **View Grades** - See all your grades and GPA
 - ✅ **Track Progress** - Monitor your academic performance
+- ✅ **Enroll in Courses** - Browse and enroll in available courses
+- ✅ **Dashboard** - Personalized dashboard with key metrics
 
 ### For Admins
+
 - ✅ **Student Management** - View, edit, and delete student accounts
 - ✅ **Course Management** - Create and manage courses
 - ✅ **Grade Management** - Assign and update grades
 - ✅ **Dashboard** - See real-time statistics and analytics
+- ✅ **User Administration** - Manage all users across the system
+- ✅ **Bulk Operations** - Import and manage users in bulk
+
+### Security & Authentication
+
+- ✅ **JWT Authentication** - Secure token-based authentication
+- ✅ **Password Encryption** - bcryptjs with salt rounds
+- ✅ **Role-Based Access** - Student, Teacher, and Admin roles
+- ✅ **Protected Routes** - Automatic redirect for unauthorized access
+- ✅ **Rate Limiting** - Protection against abuse
+- ✅ **Input Validation** - Both client and server-side validation
 
 ### Security & Performance
 - 🔒 **Secure Authentication** - JWT tokens with bcrypt password hashing
