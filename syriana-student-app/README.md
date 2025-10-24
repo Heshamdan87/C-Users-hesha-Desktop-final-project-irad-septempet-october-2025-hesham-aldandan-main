@@ -10,7 +10,7 @@
 
 **A modern, full-stack student management system using React, Node.js, and MongoDB**
 
-[Features](#-key-features) • [Tech Stack](#-tech-stack) • [Installation](#-installation) • [Documentation](#-api-documentation) • [Testing](#-testing)
+[Quick Start](#quick-start) • [Features](#key-features) • [Tech Stack](#tech-stack) • [Installation](#installation) • [Documentation](#api-documentation)
 
 </div>
 
@@ -18,7 +18,13 @@
 
 ## 📋 Overview
 
-The **Syriana Student Management System** is a comprehensive web application designed to streamline academic operations at Syriana University. This platform provides a unified solution for students, instructors, and administrators to manage courses, grades, student records, and academic analytics.
+The **Syriana Student Management System** is a comprehensive web application designed to streamline academic operations at educational institutions. This platform provides a unified solution for students, instructors, and administrators to manage courses, grades, student records, and academic analytics.
+
+**Syriana Student App** is a complete student management system that helps schools manage:
+- 👥 **Students** - Registration, profiles, and information
+- 📚 **Courses** - Course catalog and enrollment
+- 📊 **Grades** - Grading system with GPA calculation
+- 📈 **Analytics** - Performance tracking and statistics
 
 ### 🎯 Project Goals
 
