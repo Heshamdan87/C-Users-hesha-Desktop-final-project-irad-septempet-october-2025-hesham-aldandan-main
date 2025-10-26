@@ -9,7 +9,7 @@
     "create-admin": "node scripts/create-admin.js",
     "setup-admin": "node scripts/setup-admin.js",
     "create-sample-grades": "node scripts/create-sample-grades.js",
-  "test": "jest --runInBand --passWithNoTests"
+    "test": "jest --runInBand --passWithNoTests"
   },
   "keywords": [
     "nodejs",

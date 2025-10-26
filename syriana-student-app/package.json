@@ -12,9 +12,15 @@
     "test": "concurrently \"npm run test:ci --prefix frontend\" \"npm --prefix backend test\""
   },
   "devDependencies": {
-    "concurrently": "^7.6.0"
+    "concurrently": "^7.6.0",
+    "jest": "^30.2.0"
   },
-  "keywords": ["react", "node", "express", "mongodb"],
+  "keywords": [
+    "react",
+    "node",
+    "express",
+    "mongodb"
+  ],
   "author": "Hesham Al Dandan",
   "license": "ISC"
 }

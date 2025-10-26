@@ -2,7 +2,11 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AdminLoginPage from './AdminLoginPage';
+import { AuthProvider } from '../context/AuthContext';
 import { authService } from '../services/api';
+
+// Global mock token for tests
+const mockToken = 'test-jwt-token';
 
 // Mock the auth service
 jest.mock('../services/api', () => ({
@@ -25,14 +29,17 @@ describe('AdminLoginPage - Admin Login Function', () => {
   });
 
   test('should render admin login form with email and password fields', () => {
-    render(<AdminLoginPage />);
-    
+    render(
+      <AuthProvider>
+        <AdminLoginPage />
+      </AuthProvider>
+    );
     expect(screen.getByText(/Admin Login/i)).toBeInTheDocument();
     expect(screen.getByText(/Please log in to continue/i)).toBeInTheDocument();
   });
 
   test('should successfully login admin with valid credentials', async () => {
-    const mockToken = 'test-jwt-token';
+    const localMockToken = 'test-jwt-token';
     const mockUser = {
       id: '123',
       email: 'admin@example.com',
@@ -42,17 +49,21 @@ describe('AdminLoginPage - Admin Login Function', () => {
     };
 
     authService.adminLogin.mockResolvedValue({
-      success: true,
       data: {
-        token: mockToken,
-        user: mockUser,
+        data: {
+          token: localMockToken,
+          user: mockUser,
+        },
       },
     });
 
-    render(<AdminLoginPage />);
-    
-    const emailInput = screen.getByPlaceholderText(/email/i);
-    const passwordInput = screen.getByPlaceholderText(/password/i);
+    render(
+      <AuthProvider>
+        <AdminLoginPage />
+      </AuthProvider>
+    );
+    const emailInput = screen.getByPlaceholderText("admin@example.com");
+    const passwordInput = screen.getByPlaceholderText("Enter your password");
     const submitButton = screen.getByRole('button', { name: /login/i });
 
     await userEvent.type(emailInput, 'admin@example.com');
@@ -64,9 +75,9 @@ describe('AdminLoginPage - Admin Login Function', () => {
         email: 'admin@example.com',
         password: 'AdminPassword123',
       });
+      expect(localStorage.getItem('token')).toBe(localMockToken);
+      expect(mockNavigate).toHaveBeenCalledWith('/admin', { replace: true });
     });
-
-    expect(localStorage.getItem('token')).toBe(mockToken);
   });
 
   test('should show error message for invalid credentials', async () => {
@@ -77,10 +88,13 @@ describe('AdminLoginPage - Admin Login Function', () => {
       },
     });
 
-    render(<AdminLoginPage />);
-    
-    const emailInput = screen.getByPlaceholderText(/email/i);
-    const passwordInput = screen.getByPlaceholderText(/password/i);
+    render(
+      <AuthProvider>
+        <AdminLoginPage />
+      </AuthProvider>
+    );
+    const emailInput = screen.getByPlaceholderText("admin@example.com");
+    const passwordInput = screen.getByPlaceholderText("Enter your password");
     const submitButton = screen.getByRole('button', { name: /login/i });
 
     await userEvent.type(emailInput, 'admin@example.com');
@@ -88,7 +102,7 @@ describe('AdminLoginPage - Admin Login Function', () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(screen.getByText(/Invalid credentials/i)).toBeInTheDocument();
+      expect(screen.getByText(/Invalid email or password/i)).toBeInTheDocument();
     });
   });
 
@@ -100,10 +114,13 @@ describe('AdminLoginPage - Admin Login Function', () => {
       },
     });
 
-    render(<AdminLoginPage />);
-    
-    const emailInput = screen.getByPlaceholderText(/email/i);
-    const passwordInput = screen.getByPlaceholderText(/password/i);
+    render(
+      <AuthProvider>
+        <AdminLoginPage />
+      </AuthProvider>
+    );
+    const emailInput = screen.getByPlaceholderText("admin@example.com");
+    const passwordInput = screen.getByPlaceholderText("Enter your password");
     const submitButton = screen.getByRole('button', { name: /login/i });
 
     await userEvent.type(emailInput, 'student@example.com');
@@ -126,10 +143,13 @@ describe('AdminLoginPage - Admin Login Function', () => {
       },
     });
 
-    render(<AdminLoginPage />);
-    
-    const emailInput = screen.getByPlaceholderText(/email/i);
-    const passwordInput = screen.getByPlaceholderText(/password/i);
+    render(
+      <AuthProvider>
+        <AdminLoginPage />
+      </AuthProvider>
+    );
+    const emailInput = screen.getByPlaceholderText("admin@example.com");
+    const passwordInput = screen.getByPlaceholderText("Enter your password");
     const submitButton = screen.getByRole('button', { name: /login/i });
 
     await userEvent.type(emailInput, 'admin@example.com');
@@ -152,10 +172,13 @@ describe('AdminLoginPage - Admin Login Function', () => {
       },
     });
 
-    render(<AdminLoginPage />);
-    
-    const emailInput = screen.getByPlaceholderText(/email/i);
-    const passwordInput = screen.getByPlaceholderText(/password/i);
+    render(
+      <AuthProvider>
+        <AdminLoginPage />
+      </AuthProvider>
+    );
+    const emailInput = screen.getByPlaceholderText("admin@example.com");
+    const passwordInput = screen.getByPlaceholderText("Enter your password");
     const submitButton = screen.getByRole('button', { name: /login/i });
 
     await userEvent.type(emailInput, 'admin@example.com');
@@ -163,17 +186,21 @@ describe('AdminLoginPage - Admin Login Function', () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(screen.getByText(/Two-factor authentication required/i)).toBeInTheDocument();
+      expect(screen.getByText(/Enter your two-factor authentication code/i)).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('000000')).toBeInTheDocument();
     });
   });
 
   test('should handle network errors gracefully', async () => {
     authService.adminLogin.mockRejectedValue(new Error('Network Error'));
 
-    render(<AdminLoginPage />);
-    
-    const emailInput = screen.getByPlaceholderText(/email/i);
-    const passwordInput = screen.getByPlaceholderText(/password/i);
+    render(
+      <AuthProvider>
+        <AdminLoginPage />
+      </AuthProvider>
+    );
+    const emailInput = screen.getByPlaceholderText("admin@example.com");
+    const passwordInput = screen.getByPlaceholderText("Enter your password");
     const submitButton = screen.getByRole('button', { name: /login/i });
 
     await userEvent.type(emailInput, 'admin@example.com');
@@ -186,19 +213,23 @@ describe('AdminLoginPage - Admin Login Function', () => {
   });
 
   test('should clear form fields after successful login', async () => {
-    const mockToken = 'test-jwt-token';
+    const localMockToken = 'test-jwt-token';
     authService.adminLogin.mockResolvedValue({
-      success: true,
       data: {
-        token: mockToken,
-        user: { id: '123', email: 'admin@example.com', role: 'admin' },
+        data: {
+          token: localMockToken,
+          user: { id: '123', email: 'admin@example.com', role: 'admin' },
+        },
       },
     });
 
-    render(<AdminLoginPage />);
-    
-    const emailInput = screen.getByPlaceholderText(/email/i);
-    const passwordInput = screen.getByPlaceholderText(/password/i);
+    render(
+      <AuthProvider>
+        <AdminLoginPage />
+      </AuthProvider>
+    );
+    const emailInput = screen.getByPlaceholderText("admin@example.com");
+    const passwordInput = screen.getByPlaceholderText("Enter your password");
 
     await userEvent.type(emailInput, 'admin@example.com');
     await userEvent.type(passwordInput, 'AdminPassword123');
@@ -207,15 +238,19 @@ describe('AdminLoginPage - Admin Login Function', () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(localStorage.getItem('token')).toBe(mockToken);
+      expect(localStorage.getItem('token')).toBe(localMockToken);
+      expect(mockNavigate).toHaveBeenCalledWith('/admin', { replace: true });
     });
   });
 
   test('should validate email format', async () => {
-    render(<AdminLoginPage />);
-    
-    const emailInput = screen.getByPlaceholderText(/email/i);
-    const passwordInput = screen.getByPlaceholderText(/password/i);
+    render(
+      <AuthProvider>
+        <AdminLoginPage />
+      </AuthProvider>
+    );
+    const emailInput = screen.getByPlaceholderText("admin@example.com");
+    const passwordInput = screen.getByPlaceholderText("Enter your password");
     const submitButton = screen.getByRole('button', { name: /login/i });
 
     await userEvent.type(emailInput, 'invalid-email');
@@ -228,16 +263,19 @@ describe('AdminLoginPage - Admin Login Function', () => {
   });
 
   test('should require password field', async () => {
-    render(<AdminLoginPage />);
-    
-    const emailInput = screen.getByPlaceholderText(/email/i);
+    render(
+      <AuthProvider>
+        <AdminLoginPage />
+      </AuthProvider>
+    );
+    const emailInput = screen.getByPlaceholderText("admin@example.com");
     const submitButton = screen.getByRole('button', { name: /login/i });
-
     await userEvent.type(emailInput, 'admin@example.com');
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(screen.getByText(/password.*required|required.*password/i)).toBeInTheDocument();
+      expect(screen.getByText(/Email and password are required/i)).toBeInTheDocument();
     });
   });
+
 });

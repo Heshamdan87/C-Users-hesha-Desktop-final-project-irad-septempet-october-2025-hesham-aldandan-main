@@ -112,7 +112,7 @@ if (process.env.NODE_ENV === 'production') {
 app.use(notFound);
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3001;
 
 if (require.main === module) {
   const server = app.listen(PORT, '127.0.0.1', () => {

@@ -1,7 +1,9 @@
 import React from 'react';
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { render, screen, waitFor, within, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import StudentsPage from './StudentsPage';
+import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
 
 // Mocks must be hoisted for imports
 jest.mock('../context/AuthContext', () => ({ useAuth: jest.fn() }));
@@ -11,9 +13,6 @@ jest.mock('react-hot-toast', () => ({
   default: { success: jest.fn(), error: jest.fn() },
   toast: { success: jest.fn(), error: jest.fn() }
 }));
-
-import { useAuth } from '../context/AuthContext';
-import api from '../services/api';
 
 // Keep mocks hoisted and imports at top for linting
 beforeEach(() => {
@@ -45,18 +44,24 @@ test('POST: adds a new student when add form is submitted', async () => {
 
   // Open add modal (wait for the button to be available)
   const addButton = await screen.findByRole('button', { name: /Add New Student/i });
-  await userEvent.click(addButton);
+  await act(async () => {
+    await userEvent.click(addButton);
+  });
 
   // Fill form fields (only required ones for our component validation)
-  await userEvent.type(screen.getByLabelText(/First Name/i), 'Bob');
-  await userEvent.type(screen.getByLabelText(/Last Name/i), 'Jones');
-  await userEvent.type(screen.getByLabelText(/Email/i), 'b@j.com');
-  await userEvent.type(screen.getByLabelText(/Student ID/i), 'STU000002');
-  await userEvent.type(screen.getByLabelText('Password'), 'Aa11111');
-  await userEvent.type(screen.getByLabelText(/Confirm Password/i), 'Aa11111');
+  await act(async () => {
+    await userEvent.type(screen.getByLabelText(/First Name/i), 'Bob');
+    await userEvent.type(screen.getByLabelText(/Last Name/i), 'Jones');
+    await userEvent.type(screen.getByLabelText(/Email/i), 'b@j.com');
+    await userEvent.type(screen.getByLabelText(/Student ID/i), 'STU000002');
+    await userEvent.type(screen.getByLabelText('Password'), 'Aa11111');
+    await userEvent.type(screen.getByLabelText(/Confirm Password/i), 'Aa11111');
+  });
 
   // Submit
-  await userEvent.click(screen.getByRole('button', { name: /Add Student/i }));
+  await act(async () => {
+    await userEvent.click(screen.getByRole('button', { name: /Add Student/i }));
+  });
 
   // Wait for api.post to be called
   await waitFor(() => expect(api.post).toHaveBeenCalled());
@@ -81,15 +86,21 @@ test('PUT: updates a student when edit form is submitted', async () => {
   const tr = row.closest('tr');
   const editButton = within(tr).getByRole('button', { name: /Edit/i });
 
-  await userEvent.click(editButton);
+  await act(async () => {
+    await userEvent.click(editButton);
+  });
 
   // Change first name in edit modal (wait for input to appear)
   const firstNameInput = await screen.findByLabelText(/First Name/i);
-  await userEvent.clear(firstNameInput);
-  await userEvent.type(firstNameInput, 'Caroline');
+  await act(async () => {
+    await userEvent.clear(firstNameInput);
+    await userEvent.type(firstNameInput, 'Caroline');
+  });
 
   // Submit update; the edit modal's Update Student button
-  await userEvent.click(screen.getByRole('button', { name: /Update Student/i }));
+  await act(async () => {
+    await userEvent.click(screen.getByRole('button', { name: /Update Student/i }));
+  });
 
   // Wait for api.put called and updated name visible
   await waitFor(() => expect(api.put).toHaveBeenCalledWith(`/users/${students[0]._id}`, expect.any(Object)));
@@ -105,7 +116,8 @@ test('DELETE: removes student when delete is confirmed', async () => {
   useAuth.mockReturnValue({ user: { firstName: 'Admin', lastName: 'User' }, logout: jest.fn() });
 
   // Mock confirm to auto-accept
-  jest.spyOn(window, 'confirm').mockImplementation(() => true);
+  // Use global object for confirm in Jest
+  jest.spyOn(global, 'confirm').mockImplementation(() => true);
 
   render(<StudentsPage />);
 
@@ -114,7 +126,9 @@ test('DELETE: removes student when delete is confirmed', async () => {
   const tr = row.closest('tr');
   const deleteButton = within(tr).getByRole('button', { name: /Delete/i });
 
-  await userEvent.click(deleteButton);
+  await act(async () => {
+    await userEvent.click(deleteButton);
+  });
 
   await waitFor(() => expect(api.delete).toHaveBeenCalledWith(`/users/${students[0]._id}`));
 

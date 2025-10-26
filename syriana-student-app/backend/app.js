@@ -11,6 +11,7 @@ const userRoutes = require('./routes/users');
 const courseRoutes = require('./routes/courses');
 const gradeRoutes = require('./routes/grades');
 const dashboardRoutes = require('./routes/dashboard');
+const studentRoutes = require('./routes/students');
 
 const errorHandler = require('./middleware/errorHandler');
 const notFound = require('./middleware/notFound');
@@ -68,7 +69,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/grades', gradeRoutes);
+app.use('/api/students', studentRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/student', studentRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
