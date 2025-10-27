@@ -76,7 +76,7 @@ describe('AdminLoginPage - Admin Login Function', () => {
         password: 'AdminPassword123',
       });
       expect(localStorage.getItem('token')).toBe(localMockToken);
-      expect(mockNavigate).toHaveBeenCalledWith('/admin', { replace: true });
+  expect(mockNavigate).toHaveBeenCalledWith('/dashboard', { replace: true });
     });
   });
 
@@ -239,7 +239,7 @@ describe('AdminLoginPage - Admin Login Function', () => {
 
     await waitFor(() => {
       expect(localStorage.getItem('token')).toBe(localMockToken);
-      expect(mockNavigate).toHaveBeenCalledWith('/admin', { replace: true });
+  expect(mockNavigate).toHaveBeenCalledWith('/dashboard', { replace: true });
     });
   });
 

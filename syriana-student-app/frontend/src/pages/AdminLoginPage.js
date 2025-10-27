@@ -1,10 +1,11 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useEffect } from 'react';
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
-  const { adminLogin } = useAuth();
+  const { adminLogin, isAuthenticated, user } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -37,13 +38,17 @@ export default function AdminLoginPage() {
       };
 
       const result = await adminLogin(credentials);
-      
-      if (result.success || result.user) {
+
+  // debug logs removed
+
+      // Navigate if login was successful. Some API responses may omit `success` but still
+      // provide a token; handle both cases robustly.
+      if (result?.success || result?.token || localStorage.getItem('token')) {
         setEmail('');
         setPassword('');
-        // Navigate to admin dashboard
-        navigate('/admin', { replace: true });
-      } else if (result.requires2FA) {
+        // navigation will be handled by effect below; keep immediate navigate for fast path
+        try { navigate('/dashboard', { replace: true }); } catch (e) { /* ignore */ }
+      } else if (result?.requires2FA) {
         setTwoFactorRequired(true);
         setError('Enter your two-factor authentication code');
       }
@@ -68,6 +73,15 @@ export default function AdminLoginPage() {
       setLoading(false);
     }
   }, [email, password, twoFactorRequired, twoFactorCode, navigate, adminLogin]);
+
+  // Fallback: if auth state updates (token/user loaded) and current user is admin,
+  // navigate to dashboard. This handles cases where token is stored but profile
+  // loading is asynchronous and the immediate navigate didn't occur.
+  useEffect(() => {
+    if (isAuthenticated && user?.role === 'admin') {
+      try { navigate('/dashboard', { replace: true }); } catch (e) { /* ignore */ }
+    }
+  }, [isAuthenticated, user, navigate]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center p-4">

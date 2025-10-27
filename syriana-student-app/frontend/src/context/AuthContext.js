@@ -113,7 +113,8 @@ export const AuthProvider = ({ children }) => {
           const response = await authService.getProfile();
           dispatch({
             type: AUTH_ACTIONS.LOAD_USER_SUCCESS,
-            payload: response.data.user,
+            // getProfile returns { success, data: { user } }
+            payload: response.data?.data?.user,
           });
         } catch (error) {
           dispatch({

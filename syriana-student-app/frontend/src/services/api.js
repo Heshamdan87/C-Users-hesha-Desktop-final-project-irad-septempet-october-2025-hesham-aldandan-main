@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+// Use a relative baseURL so CRA's proxy (setupProxy) can forward requests in development.
+// Allow overriding via REACT_APP_API_URL for flexibility in different environments.
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: process.env.REACT_APP_API_URL || '/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
