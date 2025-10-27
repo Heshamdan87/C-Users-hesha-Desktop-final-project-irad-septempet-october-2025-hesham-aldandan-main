@@ -284,6 +284,11 @@ const DashboardPage = () => {
 
             {/* User Info and Logout */}
             <div className="flex items-center space-x-4">
+              {user?.role === 'admin' && (
+                <Link to="/admin" className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-md text-sm font-medium">
+                  Admin Panel
+                </Link>
+              )}
               <div className="text-right">
                 <p className="text-sm font-medium text-gray-900">{user?.firstName} {user?.lastName}</p>
                 <p className="text-xs text-gray-500">{user?.email}</p>
