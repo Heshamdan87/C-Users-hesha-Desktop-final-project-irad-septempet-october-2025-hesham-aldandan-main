@@ -37,7 +37,7 @@ function App() {
       return <Navigate to="/login" replace />;
     }
     if (user?.role === 'admin') {
-      return <Navigate to="/admin" replace />;
+      return <Navigate to="/dashboard" replace />;
     }
     return <Navigate to="/student" replace />;
   };
