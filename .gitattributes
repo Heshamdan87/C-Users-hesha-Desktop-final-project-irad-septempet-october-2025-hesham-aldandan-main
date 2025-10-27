@@ -1,0 +1,16 @@
+# Auto-detect text files and normalize to LF in the repository
+* text=auto eol=lf
+
+# Declare files that are truly binary and should not be normalized
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.zip binary
+*.gz binary
+*.pdf binary
+
+# Ensure executable scripts keep their executable bit when applicable
+*.sh text eol=lf
+*.ps1 text eol=lf
