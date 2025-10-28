@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -109,6 +111,33 @@ const userSchema = new mongoose.Schema({
   isEmailVerified: {
     type: Boolean,
     default: false
+  }
+  ,
+  // Security logs and session tokens (optional, added to avoid runtime errors)
+  securityLog: {
+    type: [
+      {
+        action: String,
+        ipAddress: String,
+        userAgent: String,
+        success: Boolean,
+        details: String,
+        timestamp: { type: Date, default: Date.now }
+      }
+    ],
+    default: []
+  },
+  sessionTokens: {
+    type: [
+      {
+        token: String,
+        ipAddress: String,
+        userAgent: String,
+        expiresAt: Date,
+        createdAt: { type: Date, default: Date.now }
+      }
+    ],
+    default: []
   }
 }, {
   timestamps: true,

@@ -21,7 +21,9 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   // Check role-based access
   if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
     // Redirect admin to admin page and students to student page
-    const redirectPath = user?.role === 'admin' ? '/admin' : '/student';
+    // If an admin is not allowed on the attempted page, send them to the dashboard
+    // so they land on the consolidated admin overview instead of /admin.
+    const redirectPath = user?.role === 'admin' ? '/dashboard' : '/student';
     return <Navigate to={redirectPath} replace />;
   }
 
