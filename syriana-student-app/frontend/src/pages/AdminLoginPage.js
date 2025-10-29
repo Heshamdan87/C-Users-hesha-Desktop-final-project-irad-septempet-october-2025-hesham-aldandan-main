@@ -37,9 +37,7 @@ export default function AdminLoginPage() {
         ...(twoFactorRequired && { twoFactorCode }),
       };
 
-      const result = await adminLogin(credentials);
-
-  // debug logs removed
+    const result = await adminLogin(credentials);
 
       // Navigate if login was successful. Some API responses may omit `success` but still
       // provide a token; handle both cases robustly.
