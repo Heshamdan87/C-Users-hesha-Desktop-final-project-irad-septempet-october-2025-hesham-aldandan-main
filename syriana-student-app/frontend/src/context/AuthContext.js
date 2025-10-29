@@ -173,7 +173,8 @@ export const AuthProvider = ({ children }) => {
       }
 
       // Successful login - extract token and user from response
-      const { token, user, sessionInfo } = response.data.data;
+      // Backend returns: { success: true, data: { user, token, security } }
+      const { token, user } = response.data.data;
       
       // Dispatch LOGIN_SUCCESS with correct payload structure
       dispatch({
@@ -188,7 +189,7 @@ export const AuthProvider = ({ children }) => {
         success: true,
         user,
         token,
-        sessionInfo
+        data: response.data.data
       };
     } catch (error) {
       // Handle specific error status codes

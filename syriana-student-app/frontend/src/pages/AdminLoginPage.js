@@ -39,13 +39,12 @@ export default function AdminLoginPage() {
 
     const result = await adminLogin(credentials);
 
-      // Navigate if login was successful. Some API responses may omit `success` but still
-      // provide a token; handle both cases robustly.
-      if (result?.success || result?.token || localStorage.getItem('token')) {
+      // Navigate if login was successful
+      if (result?.success || result?.token) {
         setEmail('');
         setPassword('');
-        // navigation will be handled by effect below; keep immediate navigate for fast path
-        try { navigate('/dashboard', { replace: true }); } catch (e) { /* ignore */ }
+        // Navigate to dashboard for admin users
+        navigate('/dashboard', { replace: true });
       } else if (result?.requires2FA) {
         setTwoFactorRequired(true);
         setError('Enter your two-factor authentication code');
@@ -72,12 +71,10 @@ export default function AdminLoginPage() {
     }
   }, [email, password, twoFactorRequired, twoFactorCode, navigate, adminLogin]);
 
-  // Fallback: if auth state updates (token/user loaded) and current user is admin,
-  // navigate to dashboard. This handles cases where token is stored but profile
-  // loading is asynchronous and the immediate navigate didn't occur.
+  // Redirect if already authenticated as admin
   useEffect(() => {
     if (isAuthenticated && user?.role === 'admin') {
-      try { navigate('/dashboard', { replace: true }); } catch (e) { /* ignore */ }
+      navigate('/dashboard', { replace: true });
     }
   }, [isAuthenticated, user, navigate]);
 
